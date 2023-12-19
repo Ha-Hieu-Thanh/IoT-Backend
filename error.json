@@ -1,0 +1,1 @@
+{"level":"error","message":{"devMessage":"Verify code expired","errorCode":"VerifyCodeExpired","statusCode":400},"path":"/auth/verify-code","statusCode":400,"timestamp":"2023-12-15T10:13:39.202Z"}
