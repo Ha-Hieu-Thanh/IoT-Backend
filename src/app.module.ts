@@ -11,7 +11,9 @@ import { QueueModule } from '@app/common/queue/queue.module';
 import { AppLoggerMiddleware } from '@app/common/core/middleware/appLogger.middleware';
 import { AllExceptionsFilter } from '@app/common/core/filter/exception.filter';
 import { LocationModule } from './modules/location/location.module';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { AlertModule } from './modules/alert/alert.module';
+import { SubcriptionModule } from './modules/subcription/subcription.module';
+import { DataModule } from './modules/data/data.module';
 
 @Module({
   imports: [
@@ -25,6 +27,9 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     SesModule,
     QueueModule,
     LocationModule,
+    AlertModule,
+    SubcriptionModule,
+    DataModule,
   ],
   controllers: [AppController],
   providers: [

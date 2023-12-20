@@ -16,7 +16,7 @@ export class SocketGateway {
     console.log('Client connected');
   }
 
-  @OnEvent('data')
+  @OnEvent('0981957216')
   create(@MessageBody() data: any) {
     console.log(data);
 
@@ -32,6 +32,6 @@ export class SocketGateway {
     }
 
     // EMIT DATA TO CLIENT TO SHOW STREAMING
-    this.server.emit('data', data);
+    this.server.emit('0981957216', data);
   }
 }

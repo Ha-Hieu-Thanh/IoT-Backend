@@ -44,6 +44,12 @@ const configSchema = Joi.object({
     password: Joi.string().required(),
     from: Joi.string().required(),
   }).required(),
+  mongo: Joi.object({
+    username: Joi.string().required(),
+    password: Joi.string().required(),
+    cluster: Joi.string().required(),
+    database: Joi.string().required(),
+  }).required(),
 });
 
 const config = {
@@ -89,6 +95,12 @@ const config = {
     user: process.env.NODEMAILER_USER,
     password: process.env.NODEMAILER_PASSWORD,
     from: process.env.NODEMAILER_FROM,
+  },
+  mongo: {
+    username: process.env.MONGODB_USERNAME,
+    password: process.env.MONGODB_PASSWORD,
+    cluster: process.env.MONGODB_CLUSTER,
+    database: process.env.MONGODB_DATABASE,
   },
 };
 
@@ -141,6 +153,13 @@ export interface INodemailerConfig {
   from: string;
 }
 
+export interface IMongoConfig {
+  username: string;
+  password: string;
+  cluster: string;
+  database: string;
+}
+
 export interface IConfig {
   port: number;
   database: IDatabaseConfig;
@@ -150,6 +169,7 @@ export interface IConfig {
   twilio: ITwilioConfig;
   jwt: IJwtConfig;
   nodemailer: INodemailerConfig;
+  mongo: IMongoConfig;
 }
 
 const { error, value } = configSchema.validate(config);

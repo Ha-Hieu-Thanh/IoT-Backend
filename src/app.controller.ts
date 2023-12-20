@@ -32,7 +32,7 @@ export class AppController {
   @EventPattern('0981957216')
   async getData(data: string) {
     // console.log(data);
-    await this.eventEmitter.emitAsync('data', data);
+    await this.eventEmitter.emitAsync('0981957216', data);
   }
 
   // subcribe to location 2
