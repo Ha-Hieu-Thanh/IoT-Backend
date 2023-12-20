@@ -8,25 +8,19 @@ import { NodemailerModule } from '../nodemailer/nodemailer.module';
 
 @Module({
   imports: [
-    // BullModule.registerQueue({
-    //   name: 'SMSQueue',
-    // }),
+    BullModule.registerQueue({
+      name: 'SMSQueue',
+    }),
     // SES
     BullModule.registerQueue({
       name: 'SESQueue',
     }),
-    // TwilioModule,
+    TwilioModule,
     SesModule,
     NodemailerModule,
     // Add more queues as needed
   ],
-  providers: [
-    // SMSQueue,
-    SESQueue,
-  ],
-  exports: [
-    // SMSQueue,
-    SESQueue,
-  ],
+  providers: [SMSQueue, SESQueue],
+  exports: [SMSQueue, SESQueue],
 })
 export class QueueModule {}

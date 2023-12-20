@@ -71,10 +71,10 @@ export class AuthService {
       verifyCode,
     });
     // send code to phone and email
-    // this.smsQueue.add('SendOTP', {
-    //   phone,
-    //   body: `Your verify code: ${verifyCode}`,
-    // });
+    this.smsQueue.add('SendOTP', {
+      phone,
+      body: `Your verify code: ${verifyCode}`,
+    });
     this.sesQueue.add('SendOTP', {
       to: [email],
       subject: 'Verify Code',

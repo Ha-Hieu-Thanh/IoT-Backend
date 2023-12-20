@@ -28,10 +28,10 @@ const configSchema = Joi.object({
     password: Joi.optional(),
   }).optional(),
   twilio: Joi.object({
-    id: Joi.optional(),
-    token: Joi.optional(),
-    phone: Joi.optional(),
-  }).optional(),
+    id: Joi.string().required(),
+    token: Joi.string().required(),
+    phone: Joi.string().required(),
+  }).required(),
   jwt: Joi.object({
     secretOrKey: Joi.string().required(),
     accessTokenExpiredIn: Joi.string().required(),
