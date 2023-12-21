@@ -11,4 +11,5 @@ export enum ErrorCode {
   UserExist = 'UserExist',
   VerifyCodeNotMatch = 'VerifyCodeNotMatch',
   VerifyCodeExpired = 'VerifyCodeExpired',
+  LocationNotFound = 'LocationNotFound',
 }
