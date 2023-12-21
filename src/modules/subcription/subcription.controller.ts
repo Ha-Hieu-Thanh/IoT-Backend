@@ -18,7 +18,7 @@ export class SubcriptionController {
   @Get()
   @UserPermission()
   async getSubcriptions(@User('id') userId: number) {
-    return await this.subcriptionService.getSubcriptions();
+    return await this.subcriptionService.getSubcriptions(userId);
   }
 
   @Post('/:locationId')
