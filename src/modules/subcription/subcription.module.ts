@@ -4,6 +4,7 @@ import { SubcriptionController } from './subcription.controller';
 
 @Module({
   controllers: [SubcriptionController],
-  providers: [SubcriptionService]
+  providers: [SubcriptionService],
+  exports: [SubcriptionService],
 })
 export class SubcriptionModule {}

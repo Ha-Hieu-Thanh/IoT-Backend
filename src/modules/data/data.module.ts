@@ -15,5 +15,6 @@ import { DataDocument } from '@app/common/database/mongodb/models/data.model';
   ],
   controllers: [DataController],
   providers: [DataService],
+  exports: [DataService],
 })
 export class DataModule {}

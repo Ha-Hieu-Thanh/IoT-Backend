@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
@@ -13,7 +18,9 @@ export class JwtAuthenticationGuard implements CanActivate {
     private readonly jwtAuthenticationService: JwtAuthenticationService,
   ) {}
 
-  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const token = request.headers.authorization;
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -32,7 +39,7 @@ export class JwtAuthenticationGuard implements CanActivate {
     /*                              End custom logic                              */
     /* -------------------------------------------------------------------------- */
     const user = this.jwtAuthenticationService.validateRequest(request);
-
+    console.log(user);
     return user;
   }
 

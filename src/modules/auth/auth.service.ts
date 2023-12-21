@@ -39,13 +39,15 @@ export class AuthService {
     const accessToken = this.jwtAuthenticationService.generateAccessToken({
       id: user.id,
       email: user.email,
-      type: user.role,
+      phone: user.phone,
+      role: user.role,
     });
 
     const refreshToken = this.jwtAuthenticationService.generateRefreshToken({
       id: user.id,
       email: user.email,
-      type: user.role,
+      phone: user.phone,
+      role: user.role,
     });
 
     return {
@@ -114,5 +116,27 @@ export class AuthService {
 
     await this.userRepository.update({ email }, { status: EStatus.ACTIVE });
     return true;
+  }
+
+  async refreshToken(refreshToken: string) {
+    const { id, email, phone, role } =
+      this.jwtAuthenticationService.verifyRefreshToken(refreshToken);
+    const accessToken = this.jwtAuthenticationService.generateAccessToken({
+      id,
+      email,
+      phone,
+      role,
+    });
+    const newRefreshToken =
+      await this.jwtAuthenticationService.generateRefreshToken({
+        id,
+        email,
+        phone,
+        role,
+      });
+    return {
+      accessToken,
+      refreshToken: newRefreshToken,
+    };
   }
 }

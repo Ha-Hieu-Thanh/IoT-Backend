@@ -14,6 +14,7 @@ import { LocationModule } from './modules/location/location.module';
 import { AlertModule } from './modules/alert/alert.module';
 import { SubcriptionModule } from './modules/subcription/subcription.module';
 import { DataModule } from './modules/data/data.module';
+import { JwtAuthenticationGuard } from '@app/common/jwt-authentication';
 
 @Module({
   imports: [
@@ -33,11 +34,15 @@ import { DataModule } from './modules/data/data.module';
   ],
   controllers: [AppController],
   providers: [
-    AppService,
     Logger,
+    AppService,
     {
       provide: 'APP_FILTER',
       useClass: AllExceptionsFilter,
+    },
+    {
+      provide: 'APP_GUARD',
+      useClass: JwtAuthenticationGuard,
     },
   ],
 })

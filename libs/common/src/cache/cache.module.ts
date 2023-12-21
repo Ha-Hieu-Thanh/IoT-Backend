@@ -1,9 +1,11 @@
-import { CacheModule, Global, Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as redisStore from 'cache-manager-redis-store';
 import { GlobalCacheService } from './cache.service';
 import { IConfig } from '../config/configuration';
-
+import { SubcriptionModule } from 'src/modules/subcription/subcription.module';
+import { LocationModule } from 'src/modules/location/location.module';
+import { CacheModule } from '@nestjs/cache-manager';
 @Module({
   providers: [GlobalCacheService],
   exports: [GlobalCacheService],
@@ -11,6 +13,7 @@ import { IConfig } from '../config/configuration';
     CacheModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService<IConfig, true>) => {
+        console.log(configService.get('redis'));
         return {
           store: redisStore as any,
           host: configService.get('redis').host,
@@ -22,6 +25,7 @@ import { IConfig } from '../config/configuration';
       },
       inject: [ConfigService],
     }),
+    LocationModule,
   ],
 })
 export class GlobalCacheModule {}

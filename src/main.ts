@@ -19,10 +19,9 @@ async function bootstrap() {
   );
 
   const configSwagger = new DocumentBuilder()
-    .setTitle('Tên ứng dụng của bạn')
-    .setDescription('Mô tả API của bạn')
+    .setTitle('Air Quatily IOT - API')
+    .setDescription('Dev by Thanh')
     .setVersion('1.0')
-    .addTag('tag1')
     .build();
   const document = SwaggerModule.createDocument(app, configSwagger);
   SwaggerModule.setup('api', app, document);
