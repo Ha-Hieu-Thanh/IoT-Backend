@@ -12,4 +12,6 @@ export enum ErrorCode {
   VerifyCodeNotMatch = 'VerifyCodeNotMatch',
   VerifyCodeExpired = 'VerifyCodeExpired',
   LocationNotFound = 'LocationNotFound',
+  USER_ALREADY_SUBCRIBE_TO_LOCATION = 'USER_ALREADY_SUBCRIBE_TO_LOCATION',
+  USER_NOT_SUBCRIBE_TO_LOCATION = 'USER_NOT_SUBCRIBE_TO_LOCATION',
 }

@@ -5,9 +5,11 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { DataModule } from 'src/modules/data/data.module';
 import { BullModule } from '@nestjs/bull';
 import { GlobalCacheModule } from '../cache/cache.module';
+import { AlertModule } from 'src/modules/alert/alert.module';
 
 @Module({
   imports: [
+    AlertModule,
     GlobalCacheModule,
     DataModule,
     BullModule.registerQueue({

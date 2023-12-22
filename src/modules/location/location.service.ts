@@ -26,15 +26,24 @@ export class LocationService {
     });
     if (!location)
       throw new Exception(ErrorCode.LocationNotFound, 'Location not found');
-    const subscriptions = await this.subscriptionRepository.find({
+    const subcriptions = await this.subscriptionRepository.find({
       where: { locationId: id },
     });
-    const userIds = subscriptions.map((item) => item.userId);
+    const userIds = subcriptions.map((item) => item.userId);
     const users = await this.userRepository.find({
       where: { id: In(userIds), status: EStatus.ACTIVE },
       select: ['id', 'name', 'email', 'phone'],
     });
-    return users;
+
+    // relation user with subcription
+    const result = subcriptions.map((item) => {
+      const user = users.find((user) => user.id === item.userId);
+      return {
+        subcriptionId: item.id,
+        ...user,
+      };
+    });
+    return result;
   }
 
   async deleteLocation(id: number) {

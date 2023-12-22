@@ -22,6 +22,7 @@ async function bootstrap() {
     .setTitle('Air Quatily IOT - API')
     .setDescription('Dev by Thanh')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, configSwagger);
   SwaggerModule.setup('api', app, document);

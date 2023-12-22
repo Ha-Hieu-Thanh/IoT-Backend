@@ -5,14 +5,25 @@ import { Cache } from 'cache-manager';
 import { TypeCacheData } from '../helper/const';
 import { SubcriptionService } from 'src/modules/subcription/subcription.service';
 import { LocationService } from 'src/modules/location/location.service';
-import { userInfo } from 'os';
+import Redis from 'ioredis';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class GlobalCacheService {
+  private readonly redis: Redis;
+
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly locationService: LocationService,
-  ) {}
+    private readonly configService: ConfigService,
+  ) {
+    this.redis = new Redis({
+      host: configService.get('redis').host,
+      port: configService.get('redis').port,
+      db: configService.get('redis').db,
+      password: configService.get('redis').password,
+    });
+  }
 
   /********************************************************************************** */
   async reset() {
@@ -56,27 +67,27 @@ export class GlobalCacheService {
   }
 
   async hashSet(key: string, fileName: string, data: any) {
-    return await (this.cacheManager as any).hset(key, fileName, data);
+    return await this.redis.hset(key, fileName, data);
   }
 
   //get data thoe field
   async hashGet(key: string, fieldName: string) {
-    return await (this.cacheManager as any).hget(key, fieldName);
+    return await this.redis.hget(key, fieldName);
   }
 
   // get all field-value of key
   async hashGetAll(key: string) {
-    return await (this.cacheManager as any).hgetall(key);
+    return await this.redis.hgetall(key);
   }
 
   // Update value of key by increment : value += increment
   async hincrby(key: string, fieldName: string, increment: number) {
-    return await (this.cacheManager as any).hincrby(key, fieldName, increment);
+    return await this.redis.hincrby(key, fieldName, increment);
   }
 
   //del one field in key
   async hdel(key: string, fieldName: string) {
-    return await (this.cacheManager as any).hdel(key, fieldName);
+    return await this.redis.hdel(key, fieldName);
   }
 
   /******************************************************************************************* */
@@ -88,8 +99,15 @@ export class GlobalCacheService {
 
     // get cache
     const data = await this.hashGetAll(keyCache);
-    if (data) {
-      return Object.values(data);
+    if (data && Object.keys(data).length > 0) {
+      // return Object.values(data);
+      /**
+       * [
+  '{"subcriptionId":"1","id":"9","name":"Hieu Thanh","email":"thanh.hh204787@sis.hust.edu.vn","phone":"0399344239"}'
+]
+       */
+      // transform to object
+      return Object.values(data).map((item) => JSON.parse(item));
     }
 
     // query and set user info and get user info

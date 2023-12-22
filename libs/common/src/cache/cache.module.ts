@@ -26,6 +26,7 @@ import { CacheModule } from '@nestjs/cache-manager';
       inject: [ConfigService],
     }),
     LocationModule,
+    ConfigModule,
   ],
 })
 export class GlobalCacheModule {}

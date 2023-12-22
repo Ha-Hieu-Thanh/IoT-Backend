@@ -1,0 +1,8 @@
+{
+  "humidity": 12,
+  "temperature": 13,
+  "CO_concentration": 14,
+  "CO2_concentration": 15,
+  "NH3_concentration": 16,
+  "PM25_concentration": 22
+}

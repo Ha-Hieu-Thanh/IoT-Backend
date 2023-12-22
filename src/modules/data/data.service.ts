@@ -18,12 +18,25 @@ export class DataService {
 
   async getData(query: GetDataDto): Promise<DataDocument[]> {
     const { fromDate, toDate } = query;
-    const data = await this.dataModel.find({
-      createdAt: {
-        $gte: fromDate,
-        $lte: toDate,
-      },
-    });
-    return data;
+    // check if exsist from date and to date
+    if (fromDate && toDate) {
+      return await this.dataModel.find({
+        createdAt: { $gte: fromDate, $lte: toDate },
+      });
+    }
+    // check if exsist from date
+    if (fromDate) {
+      return await this.dataModel.find({
+        createdAt: { $gte: fromDate },
+      });
+    }
+    // check if exsist to date
+    if (toDate) {
+      return await this.dataModel.find({
+        createdAt: { $lte: toDate },
+      });
+    }
+    // if not exist from date and to date
+    return await this.dataModel.find();
   }
 }
