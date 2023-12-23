@@ -15,6 +15,7 @@ import { AlertModule } from './modules/alert/alert.module';
 import { SubcriptionModule } from './modules/subcription/subcription.module';
 import { DataModule } from './modules/data/data.module';
 import { JwtAuthenticationGuard } from '@app/common/jwt-authentication';
+import { CloudinaryModule } from '@app/common/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { JwtAuthenticationGuard } from '@app/common/jwt-authentication';
     AlertModule,
     SubcriptionModule,
     DataModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [

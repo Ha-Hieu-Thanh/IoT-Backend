@@ -34,9 +34,7 @@ async function bootstrap() {
       clientId: process.env.MQTT_CLIENT_ID,
     },
   });
-  console.log(`mqtt://${process.env.MQTT_HOST}:${+process.env.MQTT_PORT}`);
   await app.startAllMicroservices();
-  console.log('Microservice is listening');
   const redisIoAdapter = new RedisSocketIoAdapter(app);
   await redisIoAdapter.connectToRedis();
   app.useWebSocketAdapter(redisIoAdapter);

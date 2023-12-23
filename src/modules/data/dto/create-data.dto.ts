@@ -3,6 +3,10 @@ import { IsNotEmpty, IsNumber } from 'class-validator';
 export class CreateDataDto {
   @IsNotEmpty()
   @IsNumber()
+  locationId: number;
+
+  @IsNotEmpty()
+  @IsNumber()
   humidity: number;
 
   @IsNotEmpty()

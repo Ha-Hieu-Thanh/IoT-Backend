@@ -10,7 +10,6 @@ export class SMSQueue {
   @Process('SendOTP')
   async sendOTP(job: Job<any>) {
     const { phone, body } = job.data as ITwilioSendOtp;
-    console.log('---SMSQUEUE---SendOTP', phone, body);
     return await this.twilioService.sendOTP({ phone, body });
   }
 }

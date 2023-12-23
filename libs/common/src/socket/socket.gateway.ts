@@ -43,7 +43,6 @@ export class SocketGateway {
 
       // TODO: get user subcribe to 0981957216 by cache
       const userInfos = await this.globalCacheService.getUserInfoByLocation(1);
-      console.log(userInfos);
       const phones = userInfos.map((item) => item.phone);
       const emails = userInfos.map((item) => item.email);
       const subcriptionIds = userInfos.map((item) => item.subcriptionId);

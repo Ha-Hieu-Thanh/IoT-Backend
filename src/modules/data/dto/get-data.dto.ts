@@ -1,6 +1,13 @@
 import { CustomISOString } from '@app/common/core/validate/validation';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, Validate } from 'class-validator';
+import { Transform } from 'class-transformer';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  Validate,
+} from 'class-validator';
 
 export class GetDataDto {
   @ApiProperty({ required: false })
@@ -12,4 +19,14 @@ export class GetDataDto {
   @IsOptional()
   @Validate(CustomISOString)
   toDate?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @Transform(({ value }) => Number(value))
+  exportCsv?: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  locationId?: number;
 }

@@ -39,7 +39,6 @@ export class JwtAuthenticationGuard implements CanActivate {
     /*                              End custom logic                              */
     /* -------------------------------------------------------------------------- */
     const user = this.jwtAuthenticationService.validateRequest(request);
-    console.log(user);
     return user;
   }
 

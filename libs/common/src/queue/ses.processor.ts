@@ -13,7 +13,6 @@ export class SESQueue {
   ) {}
   @Process('SendOTP')
   async sendOTP(job: Job<any>) {
-    console.log('SESQueue: SendOTP');
     const { to, subject, body } = job.data;
     // return await this.sesService.sendMail(to, subject, body);
     return await this.nodemailerService.sendMail({ to, subject, html: body });

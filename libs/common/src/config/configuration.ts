@@ -50,6 +50,11 @@ const configSchema = Joi.object({
     cluster: Joi.string().required(),
     database: Joi.string().required(),
   }).required(),
+  cloudinary: Joi.object({
+    cloud_name: Joi.string().required(),
+    api_key: Joi.string().required(),
+    api_secret: Joi.string().required(),
+  }).required(),
 });
 
 const config = {
@@ -101,6 +106,11 @@ const config = {
     password: process.env.MONGODB_PASSWORD,
     cluster: process.env.MONGODB_CLUSTER,
     database: process.env.MONGODB_DATABASE,
+  },
+  cloudinary: {
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
   },
 };
 
@@ -160,6 +170,12 @@ export interface IMongoConfig {
   database: string;
 }
 
+export interface ICloudinaryConfig {
+  cloud_name: string;
+  api_key: string;
+  api_secret: string;
+}
+
 export interface IConfig {
   port: number;
   database: IDatabaseConfig;
@@ -170,6 +186,7 @@ export interface IConfig {
   jwt: IJwtConfig;
   nodemailer: INodemailerConfig;
   mongo: IMongoConfig;
+  cloudinary: ICloudinaryConfig;
 }
 
 const { error, value } = configSchema.validate(config);

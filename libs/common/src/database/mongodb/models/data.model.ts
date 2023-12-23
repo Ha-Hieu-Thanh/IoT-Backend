@@ -5,6 +5,9 @@ import { BaseDocument } from '../base/base.document';
 @Schema(DefaultSchemaOptions)
 export class DataDocument extends BaseDocument {
   @Prop({ required: true })
+  locationId: string;
+
+  @Prop({ required: true })
   humidity: number;
 
   @Prop({ required: true })

@@ -12,7 +12,6 @@ import { IMongoConfig } from '@app/common/config/configuration';
         const password = configService.get<IMongoConfig>('mongo').password;
         const cluster = configService.get<IMongoConfig>('mongo').cluster;
         const database = configService.get<IMongoConfig>('mongo').database;
-        console.log(username, password, cluster, database);
         return {
           uri: `mongodb+srv://${username}:${password}@${cluster}/${database}?retryWrites=true&w=majority`,
         };

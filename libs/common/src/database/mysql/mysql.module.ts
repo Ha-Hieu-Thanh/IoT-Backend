@@ -8,7 +8,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     ConfigModule,
     TypeOrmModule.forRootAsync({
       useFactory: (configService: ConfigService) => {
-        console.log(configService.get('DATABASE_HOST'));
         return {
           type: 'mysql',
           host: configService.get('DATABASE_HOST'),

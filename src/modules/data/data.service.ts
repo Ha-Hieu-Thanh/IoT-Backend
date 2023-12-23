@@ -4,11 +4,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateDataDto } from './dto/create-data.dto';
 import { GetDataDto } from './dto/get-data.dto';
+import { CloudinaryService } from '@app/common/cloudinary/cloudinary.service';
 
 @Injectable()
 export class DataService {
   constructor(
     @InjectModel('data') private readonly dataModel: Model<DataDocument>,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   async create(data: CreateDataDto): Promise<DataDocument> {
@@ -17,26 +19,37 @@ export class DataService {
   }
 
   async getData(query: GetDataDto): Promise<DataDocument[]> {
-    const { fromDate, toDate } = query;
-    // check if exsist from date and to date
-    if (fromDate && toDate) {
-      return await this.dataModel.find({
-        createdAt: { $gte: fromDate, $lte: toDate },
-      });
-    }
-    // check if exsist from date
-    if (fromDate) {
-      return await this.dataModel.find({
-        createdAt: { $gte: fromDate },
-      });
-    }
-    // check if exsist to date
-    if (toDate) {
-      return await this.dataModel.find({
-        createdAt: { $lte: toDate },
-      });
-    }
-    // if not exist from date and to date
-    return await this.dataModel.find();
+    const { fromDate, toDate, exportCsv, locationId } = query;
+    const filter: any = {};
+    if (fromDate) filter.createdAt = { $gte: new Date(fromDate) };
+    if (toDate)
+      filter.createdAt = { ...filter.createdAt, $lte: new Date(toDate) };
+    if (locationId) filter.locationId = locationId;
+    const data = await this.dataModel.find(filter);
+    if (!exportCsv) return data;
+
+    const fields = [
+      'humidity',
+      'temperature',
+      'CO_concentration',
+      'CO2_concentration',
+      'NH3_concentration',
+      'PM25_concentration',
+      'createdAt',
+    ];
+    const replacer = (key, value) => (value === null ? '' : value);
+    const csv = data.map((row) =>
+      fields
+        .map((fieldName) => JSON.stringify(row[fieldName], replacer))
+        .join(','),
+    );
+    // transform array csv to string each row separate by \n
+    csv.unshift(fields.join(','));
+    const csvString = csv.join('\r\n');
+    const csvStringCsv = await this.cloudinaryService.uploadFile(
+      csvString,
+      'test.csv',
+    );
+    return csvStringCsv;
   }
 }

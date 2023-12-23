@@ -13,7 +13,6 @@ import { CacheModule } from '@nestjs/cache-manager';
     CacheModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService<IConfig, true>) => {
-        console.log(configService.get('redis'));
         return {
           store: redisStore as any,
           host: configService.get('redis').host,
