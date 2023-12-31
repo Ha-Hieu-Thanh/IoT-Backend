@@ -57,13 +57,11 @@ async function bootstrap() {
 
   app.useLogger(app.get(Logger));
   await app.listen(+process.env.PORT || 3000, () => {
-    // log
     app
       .get(Logger)
       .log(
-        `--------Server is listening on port ${
-          +process.env.PORT || 3000
-        }----------`,
+        `Server is listening on port ${+process.env.PORT || 3000}`,
+        'NestApplication',
       );
   });
 }

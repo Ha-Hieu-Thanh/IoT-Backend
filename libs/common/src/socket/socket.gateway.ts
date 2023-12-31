@@ -12,8 +12,11 @@ import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { GlobalCacheService } from '../cache/cache.service';
 import { AlertService } from 'src/modules/alert/alert.service';
-
-@WebSocketGateway()
+import { Logger } from '@nestjs/common';
+import { Exception } from '../core/exception';
+import { ErrorCode } from '../helper/error';
+import { JwtAuthenticationService } from '../jwt-authentication';
+@WebSocketGateway({ namespace: 'socket-data' })
 export class SocketGateway {
   constructor(
     private readonly socketService: SocketService,
@@ -22,11 +25,57 @@ export class SocketGateway {
     @InjectQueue('SMSQueue') private readonly smsQueue: Queue,
     @InjectQueue('SESQueue') private readonly sesQueue: Queue,
     private readonly globalCacheService: GlobalCacheService,
+    private readonly jwtAuthenticationService: JwtAuthenticationService,
   ) {}
   @WebSocketServer() server: Server;
+  private readonly logger = new Logger(SocketGateway.name);
+
+  afterInit() {
+    /**
+     * User connect lên server gửi kèm header bên trong chứa authorization token.
+     *  Vetify Token
+     */
+    this.server.use(async (client, next) => {
+      try {
+        const authorization =
+          client.handshake.headers.authorization || client.handshake.auth.token;
+
+        if (authorization) {
+          const payload = await this.jwtAuthenticationService.verifyAccessToken(
+            String(authorization),
+          );
+
+          if (!payload) {
+            return next(
+              Object.assign(
+                new Exception(
+                  ErrorCode.Verify_Token_Fail,
+                  'Token khong hop le',
+                ),
+              ),
+            );
+          }
+
+          Object.assign(client.data, { id: payload.id });
+        }
+
+        if (!authorization) {
+          this.logger.error('Chua truyen vao token');
+          return next(new Error('Chua truyen vao token'));
+        }
+
+        return next();
+      } catch (error) {
+        this.logger.error(error);
+        return next(new Error(error.message));
+      }
+    });
+  }
 
   handleConnection(client: Socket, ...args: any[]) {
-    console.log('Client connected');
+    this.logger.log(
+      `Client connected: ${client.id}, userId: ${client.data.id}`,
+    );
   }
 
   @OnEvent('0981957216')

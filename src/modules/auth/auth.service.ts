@@ -31,9 +31,12 @@ export class AuthService {
     const user = await this.userRepository.findOne({
       where: { email },
     });
-    if (!user) return new Exception(ErrorCode.UserNotExist, 'User not found');
-    if (!bcrypt.compare(password, user.password)) {
-      return new Exception(ErrorCode.PasswordNotMatch, 'Password not match');
+    if (!user) throw new Exception(ErrorCode.UserNotExist, 'User not found');
+
+    const isMatchPassword = await bcrypt.compare(password, user.password);
+
+    if (!isMatchPassword) {
+      throw new Exception(ErrorCode.PasswordNotMatch, 'Password not match');
     }
 
     const accessToken = this.jwtAuthenticationService.generateAccessToken({

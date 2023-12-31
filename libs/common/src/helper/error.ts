@@ -14,4 +14,5 @@ export enum ErrorCode {
   LocationNotFound = 'LocationNotFound',
   USER_ALREADY_SUBCRIBE_TO_LOCATION = 'USER_ALREADY_SUBCRIBE_TO_LOCATION',
   USER_NOT_SUBCRIBE_TO_LOCATION = 'USER_NOT_SUBCRIBE_TO_LOCATION',
+  Verify_Token_Fail = 'Verify_Token_Fail',
 }

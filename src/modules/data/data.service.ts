@@ -29,6 +29,7 @@ export class DataService {
     if (!exportCsv) return data;
 
     const fields = [
+      'locationId',
       'humidity',
       'temperature',
       'CO_concentration',
