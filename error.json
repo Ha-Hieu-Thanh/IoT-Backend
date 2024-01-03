@@ -1,3 +1,12 @@
 {"level":"error","message":{"devMessage":"Verify code expired","errorCode":"VerifyCodeExpired","statusCode":400},"path":"/auth/verify-code","statusCode":400,"timestamp":"2023-12-15T10:13:39.202Z"}
 {"level":"error","message":{"devMessage":"Verify code expired","errorCode":"VerifyCodeExpired","statusCode":400},"path":"/auth/verify-code","statusCode":400,"timestamp":"2023-12-20T02:47:50.668Z"}
 {"level":"error","message":{"devMessage":"Password not match","errorCode":"PasswordNotMatch","statusCode":400},"path":"/auth/login","statusCode":400,"timestamp":"2023-12-25T03:25:42.755Z"}
+{"level":"error","message":{"devMessage":"Password not match","errorCode":"PasswordNotMatch","statusCode":400},"path":"/auth/login","statusCode":400,"timestamp":"2024-01-03T02:50:53.822Z"}
+{"level":"error","message":{"devMessage":"Password not match","errorCode":"PasswordNotMatch","statusCode":400},"path":"/auth/login","statusCode":400,"timestamp":"2024-01-03T02:51:24.927Z"}
+{"level":"error","message":{"devMessage":"Password not match","errorCode":"PasswordNotMatch","statusCode":400},"path":"/auth/login","statusCode":400,"timestamp":"2024-01-03T02:54:44.204Z"}
+{"level":"error","message":{"devMessage":"Password not match","errorCode":"PasswordNotMatch","statusCode":400},"path":"/auth/login","statusCode":400,"timestamp":"2024-01-03T02:55:08.200Z"}
+{"level":"error","message":{"devMessage":"Password not match","errorCode":"PasswordNotMatch","statusCode":400},"path":"/auth/login","statusCode":400,"timestamp":"2024-01-03T02:55:27.584Z"}
+{"level":"error","message":{"devMessage":"Password not match","errorCode":"PasswordNotMatch","statusCode":400},"path":"/auth/login","statusCode":400,"timestamp":"2024-01-03T02:56:41.177Z"}
+{"level":"error","message":{"devMessage":"Password not match","errorCode":"PasswordNotMatch","statusCode":400},"path":"/auth/login","statusCode":400,"timestamp":"2024-01-03T02:57:01.945Z"}
+{"level":"error","message":{"devMessage":"Password not match","errorCode":"PasswordNotMatch","statusCode":400},"path":"/auth/login","statusCode":400,"timestamp":"2024-01-03T02:57:21.698Z"}
+{"level":"error","message":{"devMessage":"Password not match","errorCode":"PasswordNotMatch","statusCode":400},"path":"/auth/login","statusCode":400,"timestamp":"2024-01-03T02:57:39.840Z"}
