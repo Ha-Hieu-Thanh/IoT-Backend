@@ -27,26 +27,46 @@ export class DataService {
   }
 
   async getAqiHistoryInNearly5HoursAndSeparateEachHour(locationId: number) {
+    const currentTime = new Date();
     const data = await this.dataModel.find({
       locationId,
       createdAt: {
-        $gte: new Date(new Date().getTime() - 5 * 60 * 60 * 1000),
+        $gte: new Date(currentTime.getTime() - 5 * 60 * 60 * 1000),
       },
     });
     const result = [];
     for (let i = 0; i < 5; i++) {
+      const startTime = new Date(
+        currentTime.getFullYear(),
+        currentTime.getMonth(),
+        currentTime.getDate(),
+        currentTime.getHours() - (i + 1),
+        0,
+        0,
+      );
+      const endTime = new Date(
+        currentTime.getFullYear(),
+        currentTime.getMonth(),
+        currentTime.getDate(),
+        currentTime.getHours() - i,
+        0,
+        0,
+      );
       const dataInHour = data.filter(
         (item) =>
-          item.createdAt.getTime() >=
-            new Date(
-              new Date().getTime() - (i + 1) * 60 * 60 * 1000,
-            ).getTime() &&
-          item.createdAt.getTime() <
-            new Date(new Date().getTime() - i * 60 * 60 * 1000).getTime(),
+          item.createdAt.getTime() >= startTime.getTime() &&
+          item.createdAt.getTime() < endTime.getTime(),
       );
       const avgAqi = calculateAvgAQI(dataInHour);
-      result.push(avgAqi);
+      const endTimeInLocal = new Date(endTime);
+      endTimeInLocal.setHours(endTimeInLocal.getHours() + 7);
+
+      result.push({
+        avgAqi,
+        endTime: endTimeInLocal.toISOString(),
+      });
     }
+
     return result;
   }
 
