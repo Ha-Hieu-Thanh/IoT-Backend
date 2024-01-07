@@ -56,9 +56,14 @@ export class DataService {
     if (toDate)
       filter.createdAt = { ...filter.createdAt, $lte: new Date(toDate) };
     if (locationId) filter.locationId = locationId;
+    if (!exportCsv) {
+      const data = await this.dataModel
+        .find(filter)
+        .sort({ createdAt: -1 })
+        .limit(10);
+      return data;
+    }
     const data = await this.dataModel.find(filter);
-    if (!exportCsv) return data;
-
     const fields = [
       'locationId',
       'humidity',
