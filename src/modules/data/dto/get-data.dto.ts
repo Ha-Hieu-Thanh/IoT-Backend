@@ -27,6 +27,6 @@ export class GetDataDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
-  @IsNumber()
+  @Transform(({ value }) => Number(value))
   locationId?: number;
 }
