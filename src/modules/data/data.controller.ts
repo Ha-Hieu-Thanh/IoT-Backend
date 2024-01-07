@@ -3,6 +3,7 @@ import { DataService } from './data.service';
 import { GetDataDto } from './dto/get-data.dto';
 import { UserPermission } from '@app/common/core/decorator/permission.decorator';
 import { ApiTags } from '@nestjs/swagger';
+import { GetAqiDto } from './dto/get-aq.dto';
 
 @ApiTags('data')
 @Controller('data')
@@ -18,7 +19,10 @@ export class DataController {
 
   @UserPermission()
   @Get('/aqi')
-  async getAqi() {
-    return await this.dataService.getAqiHistoryInNearly5HoursAndSeparateEachHour();
+  async getAqi(@Query() query: GetAqiDto) {
+    const { locationId } = query;
+    return await this.dataService.getAqiHistoryInNearly5HoursAndSeparateEachHour(
+      locationId,
+    );
   }
 }

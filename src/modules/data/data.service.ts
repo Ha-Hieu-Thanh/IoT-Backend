@@ -26,8 +26,9 @@ export class DataService {
     return avgAqi;
   }
 
-  async getAqiHistoryInNearly5HoursAndSeparateEachHour() {
+  async getAqiHistoryInNearly5HoursAndSeparateEachHour(locationId: number) {
     const data = await this.dataModel.find({
+      locationId,
       createdAt: {
         $gte: new Date(new Date().getTime() - 5 * 60 * 60 * 1000),
       },
