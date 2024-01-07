@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { CreateDataDto } from './dto/create-data.dto';
 import { GetDataDto } from './dto/get-data.dto';
 import { CloudinaryService } from '@app/common/cloudinary/cloudinary.service';
+import { calculateAvgAQI } from '@app/common/helper/utils';
 
 @Injectable()
 export class DataService {
@@ -16,6 +17,36 @@ export class DataService {
   async create(data: CreateDataDto): Promise<DataDocument> {
     const createdData = new this.dataModel(data);
     return await createdData.save();
+  }
+
+  async getAqi(query: GetDataDto) {
+    const data = await this.getData(query);
+    console.log('---', { data });
+    const avgAqi = calculateAvgAQI(data);
+    return avgAqi;
+  }
+
+  async getAqiHistoryInNearly5HoursAndSeparateEachHour() {
+    const data = await this.dataModel.find({
+      createdAt: {
+        $gte: new Date(new Date().getTime() - 5 * 60 * 60 * 1000),
+      },
+    });
+    const result = [];
+    for (let i = 0; i < 5; i++) {
+      const dataInHour = data.filter(
+        (item) =>
+          item.createdAt.getTime() >=
+            new Date(
+              new Date().getTime() - (i + 1) * 60 * 60 * 1000,
+            ).getTime() &&
+          item.createdAt.getTime() <
+            new Date(new Date().getTime() - i * 60 * 60 * 1000).getTime(),
+      );
+      const avgAqi = calculateAvgAQI(dataInHour);
+      result.push(avgAqi);
+    }
+    return result;
   }
 
   async getData(query: GetDataDto): Promise<DataDocument[]> {

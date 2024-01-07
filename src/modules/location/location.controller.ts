@@ -12,8 +12,12 @@ import { LocationService } from './location.service';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { Public } from '@app/common/jwt-authentication/jwt-authentication.decorator';
-import { AdminPermission } from '@app/common/core/decorator/permission.decorator';
+import {
+  AdminPermission,
+  UserPermission,
+} from '@app/common/core/decorator/permission.decorator';
 import { ApiTags } from '@nestjs/swagger';
+import { User } from '@app/common/core/decorator/user.decorator';
 
 @ApiTags('location')
 @Controller('location')
@@ -23,6 +27,12 @@ export class LocationController {
   @Public()
   async getLocations() {
     return await this.locationService.getLocations();
+  }
+
+  @Get('/user')
+  @UserPermission()
+  async getUserLocations(@User('id') id: number) {
+    return await this.locationService.getUserLocations(id);
   }
 
   @Post()

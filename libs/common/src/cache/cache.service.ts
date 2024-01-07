@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, forwardRef } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { Cache } from 'cache-manager';
@@ -14,6 +14,7 @@ export class GlobalCacheService {
 
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @Inject(forwardRef(() => LocationService))
     private readonly locationService: LocationService,
     private readonly configService: ConfigService,
   ) {
@@ -120,5 +121,41 @@ export class GlobalCacheService {
     });
 
     return userInfos;
+  }
+
+  async deleteLocationIdCache(locationId: number) {
+    const keyCache = this.createKeyCacheData(
+      TypeCacheData.USER_INFO_BY_LOCATION,
+      locationId,
+    );
+    // valid before del
+    const data = await this.hashGetAll(keyCache);
+    if (!data || Object.keys(data).length === 0) return;
+    // del
+    await this.del(keyCache);
+  }
+
+  async deleteUserSubcribeToLocationCache(locationId: number, userId: number) {
+    const keyCache = this.createKeyCacheData(
+      TypeCacheData.USER_INFO_BY_LOCATION,
+      locationId,
+    );
+    // valid keycache userId before del
+    const data = await this.hashGet(keyCache, userId.toString());
+    if (!data) return;
+    // del
+    await this.hdel(keyCache, userId.toString());
+  }
+
+  async createUserSubcribeToLocationCache(locationId: number, userId: number) {
+    const keyCache = this.createKeyCacheData(
+      TypeCacheData.USER_INFO_BY_LOCATION,
+      locationId,
+    );
+    const userInfo = await this.locationService.getUserSubcribeToLocation(
+      locationId,
+    );
+    const data = userInfo.find((item) => item.id === userId);
+    await this.hashSet(keyCache, userId.toString(), JSON.stringify(data));
   }
 }

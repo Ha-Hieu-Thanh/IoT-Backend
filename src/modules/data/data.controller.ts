@@ -15,4 +15,10 @@ export class DataController {
   async getData(@Query() query: GetDataDto) {
     return await this.dataService.getData(query);
   }
+
+  @UserPermission()
+  @Get('/aqi')
+  async getAqi() {
+    return await this.dataService.getAqiHistoryInNearly5HoursAndSeparateEachHour();
+  }
 }

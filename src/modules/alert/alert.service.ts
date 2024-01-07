@@ -15,6 +15,27 @@ export class AlertService {
     @InjectRepository(Subscription)
     private readonly subscriptionRepository: Repository<Subscription>,
   ) {}
+  async shouldAlert(subcriptionIds: any[]) {
+    const lastAlert = await this.alertRepository.findOne({
+      where: {
+        subscriptionId: In(subcriptionIds),
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    if (!lastAlert) {
+      return true;
+    }
+
+    const currentTime = new Date();
+    const lastAlertTime = new Date(lastAlert.createdAt);
+    const timeDifference = currentTime.getTime() - lastAlertTime.getTime();
+    const minutesDifference = Math.floor(timeDifference / (1000 * 60));
+
+    return minutesDifference >= 10;
+  }
   async createAlert(body: CreateAlertDto) {
     const { subscriptionId, message } = body;
     const subscription = await this.subscriptionRepository.findOne({
@@ -49,28 +70,28 @@ export class AlertService {
       });
     }
 
-    const queryBuilder2 =
-      this.subscriptionRepository.createQueryBuilder('subscription');
-    if (query.locationIds && query.locationIds.length > 0) {
-      queryBuilder2.andWhere('subscription.locationId IN (:...locationIds)', {
-        locationIds: query.locationIds,
-      });
-    }
+    // const queryBuilder2 =
+    //   this.subscriptionRepository.createQueryBuilder('subscription');
+    // if (query.locationIds && query.locationIds.length > 0) {
+    //   queryBuilder2.andWhere('subscription.locationId IN (:...locationIds)', {
+    //     locationIds: query.locationIds,
+    //   });
+    // }
 
-    if (query.userIds && query.userIds.length > 0) {
-      queryBuilder2.andWhere('subscription.userId IN (:...userIds)', {
-        userIds: query.userIds,
-      });
-    }
+    // if (query.userIds && query.userIds.length > 0) {
+    //   queryBuilder2.andWhere('subscription.userId IN (:...userIds)', {
+    //     userIds: query.userIds,
+    //   });
+    // }
 
-    const subscriptions = await queryBuilder2.getMany();
-    const subcriptionIds = subscriptions.map((item) => item.id);
+    // const subscriptions = await queryBuilder2.getMany();
+    // const subcriptionIds = subscriptions.map((item) => item.id);
 
-    if (subcriptionIds && subcriptionIds.length > 0) {
-      queryBuilder.andWhere('alert.subscriptionId IN (:...subcriptionIds)', {
-        subcriptionIds,
-      });
-    }
+    // if (subcriptionIds && subcriptionIds.length > 0) {
+    //   queryBuilder.andWhere('alert.subscriptionId IN (:...subcriptionIds)', {
+    //     subcriptionIds,
+    //   });
+    // }
 
     const [alerts, total] = await queryBuilder
       .skip(skip)

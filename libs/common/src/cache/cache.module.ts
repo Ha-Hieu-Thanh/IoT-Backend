@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import { Global, Module, forwardRef } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as redisStore from 'cache-manager-redis-store';
 import { GlobalCacheService } from './cache.service';
@@ -24,7 +24,8 @@ import { CacheModule } from '@nestjs/cache-manager';
       },
       inject: [ConfigService],
     }),
-    LocationModule,
+    forwardRef(() => LocationModule),
+
     ConfigModule,
   ],
 })

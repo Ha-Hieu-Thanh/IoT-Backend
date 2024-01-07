@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Exception } from '@app/common/core/exception';
 import { ErrorCode } from '@app/common/helper/error';
+import { GlobalCacheService } from '@app/common/cache/cache.service';
 
 @Injectable()
 export class SubcriptionService {
@@ -13,6 +14,7 @@ export class SubcriptionService {
     private readonly subcriptionRepository: Repository<Subscription>,
     @InjectRepository(Location)
     private readonly locationRepository: Repository<Location>,
+    private readonly globalCacheService: GlobalCacheService,
   ) {}
 
   async unSubcription(userId: number, locationId: number) {
@@ -25,6 +27,12 @@ export class SubcriptionService {
         'User not subcribe to location',
       );
     await this.subcriptionRepository.delete({ userId, locationId });
+    // TODO: update cache
+    await this.globalCacheService.deleteUserSubcribeToLocationCache(
+      locationId,
+      userId,
+    );
+
     return { message: 'Unsubcribe success' };
   }
   async createSubcription(userId: number, locationId: number) {
@@ -40,6 +48,11 @@ export class SubcriptionService {
       userId,
       locationId,
     });
+    // TODO: update cache
+    await this.globalCacheService.createUserSubcribeToLocationCache(
+      locationId,
+      userId,
+    );
     return newSubcription;
   }
   async getSubcriptions(userId: number) {

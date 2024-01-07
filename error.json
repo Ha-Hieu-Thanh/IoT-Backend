@@ -10,3 +10,4 @@
 {"level":"error","message":{"devMessage":"Password not match","errorCode":"PasswordNotMatch","statusCode":400},"path":"/auth/login","statusCode":400,"timestamp":"2024-01-03T02:57:01.945Z"}
 {"level":"error","message":{"devMessage":"Password not match","errorCode":"PasswordNotMatch","statusCode":400},"path":"/auth/login","statusCode":400,"timestamp":"2024-01-03T02:57:21.698Z"}
 {"level":"error","message":{"devMessage":"Password not match","errorCode":"PasswordNotMatch","statusCode":400},"path":"/auth/login","statusCode":400,"timestamp":"2024-01-03T02:57:39.840Z"}
+{"level":"error","message":{"devMessage":"User already subcribe to location","errorCode":"USER_ALREADY_SUBCRIBE_TO_LOCATION","statusCode":400},"path":"/subcription/1","statusCode":400,"timestamp":"2024-01-04T16:19:51.850Z"}

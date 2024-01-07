@@ -79,58 +79,64 @@ export class SocketGateway {
   }
 
   @OnEvent('0981957216')
-  async create(@MessageBody() data: any) {
+  async create(@MessageBody() rawData: any) {
+    const { topic, others: data } = rawData;
     console.log(data);
 
-    // ADD TO QUEUE TO SAVE TO DB MONGODB
     await this.dataService.create(data);
-    // LOGIC TO EMIT WARNING
-    const warningData = data.temperature; // calculate AQI
-    if (warningData > 30) {
-      // emit to client
-      this.server.emit('warning', warningData);
+    const dateNow = new Date().toISOString();
+    const dateNowMinus5 = new Date(
+      new Date().getTime() - 5 * 60 * 1000,
+    ).toISOString();
 
-      // TODO: get user subcribe to 0981957216 by cache
-      const userInfos = await this.globalCacheService.getUserInfoByLocation(1);
+    const query = {
+      fromDate: dateNowMinus5,
+      toDate: dateNow,
+      locationId: data.locationId,
+    };
+
+    const dataInNearly5Min = await this.dataService.getAqi(query);
+    console.log(dataInNearly5Min);
+    if (dataInNearly5Min > 300) {
+      this.server.emit('warning', dataInNearly5Min);
+
+      const userInfos = await this.globalCacheService.getUserInfoByLocation(
+        data.locationId,
+      );
       const phones = userInfos.map((item) => item.phone);
       const emails = userInfos.map((item) => item.email);
       const subcriptionIds = userInfos.map((item) => item.subcriptionId);
-      // queue NOTI and MAIL and SAVE TO DB warning to client who subcribe
-      // this.smsQueue.add('SendOTP', {
-      //   phone: '0399344239',
-      //   body: 'Warning',
-      // });
-      phones.forEach((phone) => {
-        this.smsQueue.add('SendOTP', {
-          phone: phone,
-          body: 'Warning' + warningData,
+      const isShouldAlert = await this.alertService.shouldAlert(subcriptionIds);
+      if (isShouldAlert) {
+        phones.forEach((phone) => {
+          this.smsQueue.add('SendOTP', {
+            phone: phone,
+            body: 'Warning ' + dataInNearly5Min,
+          });
         });
-      });
 
-      // this.sesQueue.add('SendOTP', {
-      //   to: 'hieuthanh4a2@gmail.com',
-      //   subject: 'Warning',
-      //   body: 'Warning',
-      // });
-      emails.forEach((email) => {
-        this.sesQueue.add('SendOTP', {
-          to: email,
-          subject: 'Warning',
-          body: 'Warning' + warningData,
+        emails.forEach((email) => {
+          this.sesQueue.add('SendOTP', {
+            to: email,
+            subject: 'Warning',
+            body: `
+            Warning!
+            The AQI currently is ${dataInNearly5Min} and it not good
+            Please do not go to this location now!
+            `,
+          });
         });
-      });
 
-      // save to alert by bulk add
-      const alerts = subcriptionIds.map((item) => {
-        return {
-          subscriptionId: item,
-          message: 'Warning' + warningData,
-        };
-      });
-      await this.alertService.createAlerts(alerts);
+        const alerts = subcriptionIds.map((item) => {
+          return {
+            subscriptionId: item,
+            message: 'Warning ' + dataInNearly5Min,
+          };
+        });
+        await this.alertService.createAlerts(alerts);
+      }
     }
 
-    // EMIT DATA TO CLIENT TO SHOW STREAMING
-    this.server.emit('0981957216', data);
+    this.server.emit(topic, data);
   }
 }
